@@ -5,8 +5,9 @@ const myMap = new HashMap();
 
 console.log(myMap.hash('Chris'));
 
-myMap.set('Chris');
-console.log(myMap.buckets);
+myMap.set('Chris', 33);
+// console.log(myMap.buckets);
+console.log(myMap.remove('Banana'));
 
 // set() calls hash() to figure out which bucket to place into,
 // then it adds an item into that bucket

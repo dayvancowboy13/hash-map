@@ -14,7 +14,7 @@ export default class HashMap {
 
         }
 
-        console.log(this.buckets.length);
+        // console.log(this.buckets.length);
 
         // if (index < 0 || index >= buckets.length) {
 
@@ -43,10 +43,74 @@ export default class HashMap {
 
         let index = this.hash(key) % this.buckets.length;
 
-        this.buckets[index] = {
+        this.buckets[index].push({
             [key]:
                 value
-        };
+        });
+
+    }
+
+    get(key) {
+
+        let index = this.hash(key) % this.buckets.length;
+        let b = this.buckets[index];
+
+        for (let i = 0; i <= b.length; i++) {
+
+            if (b[i] && b[i].hasOwnProperty(key)) return b[i][key];
+
+        }
+
+        return null;
+
+    }
+
+    has(key) {
+
+        // get the bucket it might/should be in
+        let index = this.hash(key) % this.buckets.length;
+        let b = this.buckets[index];
+
+        for (let i = 0; i <= b.length; i++) {
+
+            if (b[i] && b[i].hasOwnProperty(key)) return true;
+
+        }
+
+        return false;
+
+    }
+
+    remove(key) {
+
+        if (this.has(key)) {
+
+            // remove it
+            let index = this.hash(key) % this.buckets.length;
+            let b = this.buckets[index];
+
+            const idKey = (element) => {
+
+                element.hasOwnProperty(key);
+
+            };
+
+            let keyIndex = b.findIndex(idKey);
+            b.splice(keyIndex, 1);
+
+            return true;
+
+        } else return false;
+
+    }
+
+    static #checkIndex(index) {
+
+        if (index < 0 || index >= buckets.length) {
+
+            throw new Error('Trying to access index out of bound');
+
+        }
 
     }
 
