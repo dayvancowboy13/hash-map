@@ -5,7 +5,7 @@ export default class HashMap {
     constructor() {
 
         this.capacity = 16;
-        this.loadFactor = 0.77;
+        this.loadFactor = 0.75;
         this.buckets = [];
 
         for (let i = 0; i < this.capacity; i++) {
@@ -13,14 +13,6 @@ export default class HashMap {
             this.buckets.push(new Array());
 
         }
-
-        // console.log(this.buckets.length);
-
-        // if (index < 0 || index >= buckets.length) {
-
-        //     throw new Error('Trying to access index out of bound');
-
-        // }
 
     }
 
@@ -43,6 +35,7 @@ export default class HashMap {
 
         let index = this.hash(key) % this.buckets.length;
 
+        this.#checkIndex(index);
         this.buckets[index].push({
             [key]:
                 value
@@ -53,8 +46,8 @@ export default class HashMap {
     get(key) {
 
         let index = this.hash(key) % this.buckets.length;
+        this.#checkIndex(index);
         let b = this.buckets[index];
-
         for (let i = 0; i <= b.length; i++) {
 
             if (b[i] && b[i].hasOwnProperty(key)) return b[i][key];
@@ -69,8 +62,9 @@ export default class HashMap {
 
         // get the bucket it might/should be in
         let index = this.hash(key) % this.buckets.length;
-        let b = this.buckets[index];
 
+        this.#checkIndex(index);
+        let b = this.buckets[index];
         for (let i = 0; i <= b.length; i++) {
 
             if (b[i] && b[i].hasOwnProperty(key)) return true;
@@ -79,14 +73,15 @@ export default class HashMap {
 
         return false;
 
+
     }
 
     remove(key) {
 
         if (this.has(key)) {
 
-            // remove it
             let index = this.hash(key) % this.buckets.length;
+            this.#checkIndex(index);
             let b = this.buckets[index];
 
             const idKey = (element) => {
@@ -104,9 +99,111 @@ export default class HashMap {
 
     }
 
-    static #checkIndex(index) {
+    length() {
 
-        if (index < 0 || index >= buckets.length) {
+        let sum = 0;
+        for (let i = 0; i < this.buckets.length; i++) {
+
+            this.#checkIndex(i);
+            sum += this.buckets[i].length;
+
+        }
+
+        return sum;
+
+    }
+
+    clear() {
+
+        for (let i = 0; i < this.buckets.length; i++) {
+
+            let b = this.buckets[i];
+            while (b.length !== 0) b.pop();
+
+        }
+
+    }
+
+    keys() {
+
+        let keysInMap = [];
+
+        for (let i = 0; i < this.buckets.length; i++) {
+
+            this.#checkIndex(i);
+            let b = this.buckets[i];
+            for (let j = 0; j < b.length; j++) {
+
+                for (let bKey in b[j]) {
+
+                    console.log(bKey);
+                    keysInMap.push(bKey);
+
+                }
+
+            }
+
+        }
+
+        return keysInMap;
+
+    }
+
+    values() {
+
+        let values = [];
+
+        for (let i = 0; i < this.buckets.length; i++) {
+
+            this.#checkIndex(i);
+            let b = this.buckets[i];
+            for (let j = 0; j < b.length; j++) {
+
+                for (let bKey in b[j]) {
+
+                    console.log(b[j][bKey]);
+                    values.push(b[j][bKey]);
+
+                }
+
+            }
+
+        }
+
+        return values;
+
+    }
+
+    entries() {
+
+        let entries = [];
+
+        for (let i = 0; i < this.buckets.length; i++) {
+
+            this.#checkIndex(i);
+            let b = this.buckets[i];
+            for (let j = 0; j < b.length; j++) {
+
+                for (let bKey in b[j]) {
+
+                    entries.push([
+                        bKey,
+                        b[j][bKey]
+                    ]);
+
+                }
+
+            }
+
+        }
+
+        return entries;
+
+    }
+
+    #checkIndex(index) {
+
+        if (index < 0 || index >= this.buckets.length) {
 
             throw new Error('Trying to access index out of bound');
 
