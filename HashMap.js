@@ -1,5 +1,3 @@
-import LinkedList from './LinkedList.js';
-
 export default class HashMap {
 
     constructor() {
@@ -31,7 +29,41 @@ export default class HashMap {
 
     }
 
+    #loadFactorExceeded() {
+
+        let maxEntries = this.loadFactor * this.capacity;
+
+        if (this.length() + 1 > maxEntries) return true;
+        else return false;
+
+    }
+
+    #expandHashMap() {
+
+        this.capacity *= 2;
+        let newBuckets = [];
+        for (let i = 0; i < this.capacity; i++) {
+
+            newBuckets.push(new Array());
+
+        }
+
+        // rebuild hashmap
+        let entries = this.entries();
+        this.buckets = newBuckets;
+
+        for (let pairs of entries) {
+
+            this.set(pairs[0], pairs[1]);
+
+        }
+
+    }
+
     set(key, value = null) {
+
+        if (this.has(key)) this.remove(key);
+        else if (this.#loadFactorExceeded()) this.#expandHashMap();
 
         let index = this.hash(key) % this.buckets.length;
 
@@ -91,7 +123,7 @@ export default class HashMap {
             };
 
             let keyIndex = b.findIndex(idKey);
-            b.splice(keyIndex, 1);
+            b.splice(keyIndex - 1, 1);
 
             return true;
 

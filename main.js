@@ -17,5 +17,16 @@ test.set('kite', 'pink');
 test.set('lion', 'golden');
 
 console.log(test.buckets);
-// console.log(test.length());
+
+
+console.log(test.buckets);
+console.log(test.length());
+
+test.set('moon', 'silver');
+test.set('jacket', 'magenta');
+
+console.log(test.buckets);
+console.log(test.length());
 console.log(test.entries());
+test.clear();
+// console.log(test.buckets);
